@@ -1,40 +1,87 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-T414CJ4FGL"></script>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-C10EB2VE8J"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-T414CJ4FGL');
+  gtag('config', 'G-C10EB2VE8J');
 </script>
+
 <title>Audio semanal</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
-  body { font-family: sans-serif; text-align: center; padding-top: 50px; background:#f4f4f4; }
-  audio { width: 90%; max-width: 400px; }
-  img { display: block; margin-left: auto; margin-right: auto; }
-  #semana-texto { color:#555; font-size: 1.1em; margin-top: -10px; margin-bottom: 20px; }
+  body {
+    font-family: sans-serif;
+    text-align: center;
+    padding-top: 50px;
+    background: #f4f4f4;
+  }
+  audio {
+    width: 90%;
+    max-width: 400px;
+  }
+  img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #semana-texto {
+    color: #555;
+    font-size: 1.1em;
+    margin-top: -10px;
+    margin-bottom: 20px;
+  }
 </style>
 </head>
+
 <body>
-  <img src="logo.jpg" alt="Logo" style="max-width: 200px; margin-bottom: 20px;">
+
+  <img src="logo.jpg" alt="Logo"
+       style="max-width: 200px; margin-bottom: 20px;">
+
   <h2>🎧 Audio de la semana</h2>
   <p id="semana-texto"></p>
+
   <audio controls id="player"></audio>
+
   <script>
     const params = new URLSearchParams(window.location.search);
     const file = params.get('audio');
+    const player = document.getElementById('player');
+
     if (file) {
-      document.getElementById('player').src = file;
-      const nombre = file.replace('.mp3', '');
+
+      player.src = file;
+
+      const nombre = file.split('/').pop().replace(/\.mp3$/i, '');
+
       document.title = 'Audio - ' + nombre;
-      document.getElementById('semana-texto').textContent = nombre.charAt(0).toUpperCase() + nombre.slice(1);
+
+      document.getElementById('semana-texto').textContent =
+        nombre.charAt(0).toUpperCase() + nombre.slice(1);
+
+      // Registrar cada inicio de reproducción
+      player.addEventListener('play', function() {
+
+        gtag('event', 'audio_play', {
+          project: 'Mi refugio de otoño',
+          audio_name: nombre,
+          transport_type: 'beacon'
+        });
+
+      });
+
     } else {
       document.body.innerHTML += '<p>No se especificó audio.</p>';
     }
   </script>
+
 </body>
 </html>
